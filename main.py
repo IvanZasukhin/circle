@@ -1,16 +1,43 @@
-# This is a sample Python script.
+import sys
+import random
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from PyQt5 import uic, QtCore
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPainter, QPen, QBrush
+from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow
+
+if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
+    QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+
+if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
+    QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+class MyProgram(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('Ui.ui', self)  # from ui file
+        # self.setupUi(self) # from py file (need to import class from generated .py file)
+        self.initUI()
+
+    def initUI(self):
+        self.pushButton.clicked.connect(self.update)
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(QPen(Qt.yellow, 8, Qt.SolidLine))
+        painter.setBrush(QBrush(Qt.yellow, Qt.SolidPattern))
+        r = random.randint(1, 500)
+        painter.drawEllipse(40, 40, r, r)
 
 
-# Press the green button in the gutter to run the script.
+def except_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    app = QApplication(sys.argv)
+    form = MyProgram()
+    form.show()
+    sys.excepthook = except_hook
+    sys.exit(app.exec())
